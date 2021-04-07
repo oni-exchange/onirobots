@@ -5,9 +5,9 @@ const LotteryNFT = artifacts.require('LotteryNFT');
 const LotteryUpgradeProxy = artifacts.require("LotteryUpgradeProxy");
 const OniProfile = artifacts.require("OniProfile");
 
-contract('OniProfile',([owner, alice, bob,carol]) => {
+contract('OniProfile',([owner, proxyAdmin, alice, bob, carol]) => {
     beforeEach(async () => {
-        this.mockBEP = await MockBEP20.new("Oniswap", "ONI", 1000000000, {from:owner});
+        this.mockBEP = await MockBEP20.new("Oniswap", "ONI", ether('1000000000'), { from: owner });
         this.lotteryNFT = await LotteryNFT.new()
         this.lottery = await Lottery.new()
         const abiEncodeData = web3.eth.abi.encodeFunctionCall({
@@ -47,28 +47,23 @@ contract('OniProfile',([owner, alice, bob,carol]) => {
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
-        }, [this.mockBEP.address, this.lotteryNFT.address, ether("1"), 100, owner, owner]);
+        }, [this.mockBEP.address, this.lotteryNFT.address, ether('1'), 100, owner, owner]);
 
-        await LotteryUpgradeProxy.new(this.lottery.address, owner.address, abiEncodeData);
+        const proxyInstance = await LotteryUpgradeProxy.new(this.lottery.address, proxyAdmin, abiEncodeData);
+        this.lottery = await Lottery.at(proxyInstance.address);
 
-        await this.lottery.initialize(this.mockBEP.address, this.lotteryNFT.address, ether("1"), 100, owner, owner)
+        await this.mockBEP.transfer(bob, ether('2'), { from: owner });
+        await this.mockBEP.transfer(alice, ether('2'), { from: owner });
+        await this.mockBEP.transfer(carol, ether('2'), { from: owner });
 
-
-        await LotteryUpgradeProxy.deployed();
-        this.lotteryProxyAddress = LotteryUpgradeProxy.address;
-
-        const lotteryABIFile = "test/abi/lottery.abi";
-        const lotteryABI = JSON.parse(fs.readFileSync(lotteryABIFile));
-        this.lotteryProxy = new web3.eth.Contract(lotteryABI, this.lotteryProxyAddress);
-
-        await this.lotteryNFT.transferOwnership(this.lotteryProxyAddress, {from: minter});
-        await this.mockBEP.transfer(bob, ether("2"), { from: minter });
-        await this.mockBEP.transfer(alice, ether("2"), { from: minter });
-        await this.mockBEP.transfer(carol, ether("2"), { from: minter });
-
-        this.oni_profile = await OniProfile.new(this.mockBEP.address, ether("1"),ether("1"),ether("1"), {from:owner})
-
+        this.oni_profile = await OniProfile.new(this.mockBEP.address, ether('1'), ether('1'), ether('1'), { from:owner })
     });
+
+    it('test', async () => {
+      const minPrice = await this.lottery.minPrice.call();
+      console.log('minPrice',  minPrice.toString());
+    });
+
     describe('#addTeam', () => {
         describe('failure', () => {
             it('reverts when name is too short', async () => {
@@ -82,20 +77,22 @@ contract('OniProfile',([owner, alice, bob,carol]) => {
             it('reverts when requester is not admin', async () => {
                 await expectRevert(this.oni_profile.addTeam("Team", "It is the best team ever", { from: alice }), "Not the main admin");
             });
-        })
+        });
+
         describe('success', () => {
             it('emits a TeamAdd event', async () => {
                 const result = await this.oni_profile.addTeam("Team", "It is the best team ever", {from: owner});
                 console.log(result.logs.args)
                 await expectEvent.inTransaction(result.tx, this.oni_profile, "TeamAdd");
             });
-        })
-    })
-    // describe('#createProfile', ()=>{
-    //         describe('failure', () => {
-    //             it('reverts when name is too short', async () => {
-    //                 await expectRevert(this.oni_profile.addTeam("T", "It is the best team ever", {from: owner}), "Must be > 3");
-    //             });
-    //         })
-    // })
+        });
+    });
+
+    describe('#createProfile', ()=>{
+        describe('failure', () => {
+            it('reverts when name is too short', async () => {
+                await expectRevert(this.oni_profile.addTeam("T", "It is the best team ever", {from: owner}), "Must be > 3");
+            });
+        });
+    });
 });
