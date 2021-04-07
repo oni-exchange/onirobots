@@ -229,7 +229,7 @@ contract Lottery is LotteryOwnable, Initializable {
         emit Buy(msg.sender, tokenId);
     }
 
-    function  multiBuy(uint256 _price, uint8[4][] memory _numbers) external inDrawingPhase {
+    function multiBuy(uint256 _price, uint8[4][] memory _numbers) external inDrawingPhase {
         require (_price >= minPrice, 'price must above minPrice');
         uint256 totalPrice  = 0;
         for (uint i = 0; i < _numbers.length; i++) {
@@ -265,7 +265,7 @@ contract Lottery is LotteryOwnable, Initializable {
         emit Claim(msg.sender, _tokenId, reward);
     }
 
-    function  multiClaim(uint256[] memory _tickets) external {
+    function multiClaim(uint256[] memory _tickets) external {
         uint256 totalReward = 0;
         for (uint i = 0; i < _tickets.length; i++) {
             require (msg.sender == lotteryNFT.ownerOf(_tickets[i]), "not from owner");
