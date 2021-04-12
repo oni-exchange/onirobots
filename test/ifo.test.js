@@ -5,6 +5,7 @@ const LotteryNFT = artifacts.require('LotteryNFT');
 const LotteryUpgradeProxy = artifacts.require("LotteryUpgradeProxy");
 const OniProfile = artifacts.require('OniProfile');
 const PointCenterIFO = artifacts.require('PointCenterIFO');
+const IFO = artifacts.require('IFO');
 
 
 contract('PointCenterIFO',([owner, proxyAdmin, alice, bob, carol]) => {
@@ -56,6 +57,9 @@ contract('PointCenterIFO',([owner, proxyAdmin, alice, bob, carol]) => {
         this.lottery = await Lottery.at(this.proxyInstance.address);
         this.oni_profile = await OniProfile.new(this.mockBEP.address, ether('0.1'), ether('0.1'), ether('0.1'), { from: owner })
         this.point_centerIFO = await PointCenterIFO.new(this.oni_profile.address, '10')
+
+        this.custom_tokenBEP = await MockBEP20.new('Ohmytoken', 'OMT', ether('1000000000'), { from: owner });
+        this.ifo = await IFO.new(this.mockBEP.address, this.custom_tokenBEP.address, '1', '1000000000', '1000000000000000000', "100000000", owner)
     });
 
     describe('#updateMaxViewLength', () => {
@@ -66,4 +70,28 @@ contract('PointCenterIFO',([owner, proxyAdmin, alice, bob, carol]) => {
         });
     });
 
+    describe('#addIFOAddress', () => {
+        describe('success', () => {
+            it('adds IFO', async () => {
+                await this.point_centerIFO.addIFOAddress(this.ifo.address, '1', '1', '10', {from: owner});
+            });
+        });
+    });
+
+    describe('#checkClaimStatus', () => {
+        describe('success', () => {
+            it('checks claim status', async () => {
+                const response = await this.point_centerIFO.checkClaimStatus.call(owner, this.ifo.address);
+                console.log(response)
+            });
+        });
+    });
+
+    describe('#getPoints', () => {
+        describe('success', () => {
+            it('returns points', async () => {
+                await this.point_centerIFO.getPoints(this.custom_tokenBEP.address);
+            });
+        });
+    });
 });
