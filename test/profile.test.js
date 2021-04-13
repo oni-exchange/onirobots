@@ -52,7 +52,7 @@ contract('OniProfile',([owner, proxyAdmin, alice, bob, carol]) => {
             'type': 'function'
         }, [this.mockBEP.address, this.lotteryNFT.address, ether('0.001'), 10, owner, owner]);
 
-        this.proxyInstance = await LotteryUpgradeProxy.new(this.lottery.address, owner, abiEncodeData);
+        this.proxyInstance = await LotteryUpgradeProxy.new(this.lottery.address, proxyAdmin, abiEncodeData);
         this.lotteryProxyAddress = this.proxyInstance.address;
         this.lottery = await Lottery.at(this.proxyInstance.address);
         console.log('lottery: ', this.lottery.address)

@@ -1,7 +1,7 @@
-const HDWalletProvider = require("truffle-hdwallet-provider-privkey");
+const HDWalletProvider = require("@truffle/hdwallet-provider");
 
 // add private key here
-const privKey = [""]
+const privKey = [];
 
 module.exports = {
   // Uncommenting the defaults below
