@@ -1,4 +1,8 @@
-var HDWalletProvider = require("truffle-hdwallet-provider");
+const HDWalletProvider = require("truffle-hdwallet-provider-privkey");
+
+// add private key here
+const privKey = [""]
+
 module.exports = {
   // Uncommenting the defaults below
   // provides for an easier quick-start with Ganache.
@@ -7,21 +11,26 @@ module.exports = {
   // for more details on how to specify configuration options!
   //
   networks: {
-   development: {
-     host: "127.0.0.1",
-     port: 8545,
-     network_id: "*"
-   },
-    test: {
-      host: "127.0.0.1",
-      port: 8545,
-      network_id: "*"
-    },
-    otherhost: {
-      host: "192.168.1.2",
-      port: 7545,
-      network_id: "*"
-    }
+      development: {
+          host: "127.0.0.1",
+          port: 8545,
+          network_id: "*"
+      },
+      test: {
+          host: "127.0.0.1",
+          port: 8545,
+          network_id: "*"
+      },
+      otherhost: {
+          host: "192.168.1.2",
+          port: 7545,
+          network_id: "*"
+      },
+      binancetest: {
+          provider: () => new HDWalletProvider(privKey, 'https://data-seed-prebsc-1-s1.binance.org:8545'),
+          host: 'https://data-seed-prebsc-1-s1.binance.org:8545',
+          network_id: 97,
+      },
   },
   plugins: [
     'truffle-plugin-verify'

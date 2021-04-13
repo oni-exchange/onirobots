@@ -7,7 +7,7 @@ const Web3 = require('web3');
 const web3 = new Web3(new Web3.providers.HttpProvider('https://data-seed-prebsc-1-s1.binance.org:8545'));
 
 module.exports = async function(deployer, network) {
-  if (network === 'development' || network === 'test' || network === 'soliditycoverage' || network=="otherhost") {
+  if (network === 'development' || network === 'test' || network === 'soliditycoverage' || network=='otherhost' || network=='binancetest') {
     // do nothing
   } else {
     await deployer.deploy(LotteryNFT);

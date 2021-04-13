@@ -9,7 +9,9 @@ const OniProfile = artifacts.require('OniProfile');
 contract('OniProfile',([owner, proxyAdmin, alice, bob, carol]) => {
     beforeEach(async () => {
         this.mockBEP = await MockBEP20.new('Oniswap', 'ONI', ether('1000000000'), {from: owner});
+        console.log('mockBEP: ', this.mockBEP.address)
         this.lotteryNFT = await LotteryNFT.new();
+        console.log('lotteryNFT: ', this.lotteryNFT.address)
         this.lottery = await Lottery.new();
         const abiEncodeData = web3.eth.abi.encodeFunctionCall({
             'inputs': [
@@ -48,12 +50,14 @@ contract('OniProfile',([owner, proxyAdmin, alice, bob, carol]) => {
             'outputs': [],
             'stateMutability': 'nonpayable',
             'type': 'function'
-        }, [this.mockBEP.address, this.lotteryNFT.address, ether('0.1'), 10, owner, owner]);
+        }, [this.mockBEP.address, this.lotteryNFT.address, ether('0.001'), 10, owner, owner]);
 
-        this.proxyInstance = await LotteryUpgradeProxy.new(this.lottery.address, proxyAdmin, abiEncodeData);
+        this.proxyInstance = await LotteryUpgradeProxy.new(this.lottery.address, owner, abiEncodeData);
         this.lotteryProxyAddress = this.proxyInstance.address;
         this.lottery = await Lottery.at(this.proxyInstance.address);
-        this.oni_profile = await OniProfile.new(this.mockBEP.address, ether('0.1'), ether('0.1'), ether('0.1'), {from: owner})
+        console.log('lottery: ', this.lottery.address)
+        this.oni_profile = await OniProfile.new(this.mockBEP.address, ether('0.001'), ether('0.001'), ether('0.001'), {from: owner})
+        console.log('oni_profile: ', this.oni_profile.address)
     });
 
     // commented to make tests run faster
@@ -65,28 +69,28 @@ contract('OniProfile',([owner, proxyAdmin, alice, bob, carol]) => {
 
     // commented to make tests run faster
     // uncomment to run
-    describe('#addTeam', () => {
-        describe('failure', () => {
-            it('reverts when name is too short', async () => {
-                await expectRevert(this.oni_profile.addTeam('T', 'It is the best team ever', {from: owner}), 'Must be > 3');
-            });
-
-            it('reverts when name is too long', async () => {
-                await expectRevert(this.oni_profile.addTeam('TeamTeamTeamTeamTeamTeam', 'It is the best team ever', {from: owner}), 'Must be < 20');
-            });
-
-            it('reverts when requester is not admin', async () => {
-                await expectRevert(this.oni_profile.addTeam('Team', 'It is the best team ever', {from: alice}), 'Not the main admin');
-            });
-        });
-
-        describe('success', () => {
-            it('emits a TeamAdd event', async () => {
-                const result = await this.oni_profile.addTeam('Team', 'It is the best team ever', {from: owner});
-                await expectEvent.inTransaction(result.tx, this.oni_profile, 'TeamAdd');
-            });
-        });
-    });
+    // describe('#addTeam', () => {
+    //     describe('failure', () => {
+    //         it('reverts when name is too short', async () => {
+    //             await expectRevert(this.oni_profile.addTeam('T', 'It is the best team ever', {from: owner}), 'Must be > 3');
+    //         });
+    //
+    //         it('reverts when name is too long', async () => {
+    //             await expectRevert(this.oni_profile.addTeam('TeamTeamTeamTeamTeamTeam', 'It is the best team ever', {from: owner}), 'Must be < 20');
+    //         });
+    //
+    //         it('reverts when requester is not admin', async () => {
+    //             await expectRevert(this.oni_profile.addTeam('Team', 'It is the best team ever', {from: alice}), 'Not the main admin');
+    //         });
+    //     });
+    //
+    //     describe('success', () => {
+    //         it('emits a TeamAdd event', async () => {
+    //             const result = await this.oni_profile.addTeam('Team', 'It is the best team ever', {from: owner});
+    //             await expectEvent.inTransaction(result.tx, this.oni_profile, 'TeamAdd');
+    //         });
+    //     });
+    // });
 
 
     // commented to make tests run faster
@@ -160,27 +164,27 @@ contract('OniProfile',([owner, proxyAdmin, alice, bob, carol]) => {
 
     // commented to make tests run faster
     // uncomment to run
-    describe('#lottery.buy and draw', () => {
-        describe('success', () => {
-            it('buying and draw', async () => {
-                await this.lotteryNFT.transferOwnership(this.lottery.address)
-
-                await this.mockBEP.approve(this.lottery.address, ether('100'), {from: alice});
-                await this.lottery.buy(ether('0.1'), [1, 2, 3, 4], {from: alice});
-                await this.mockBEP.approve(this.lottery.address, ether('100'), {from: bob});
-                await this.lottery.buy(ether('0.1'), [5, 7, 9, 3], {from: bob});
-                await this.mockBEP.approve(this.lottery.address, ether('100'), {from: carol});
-                await this.lottery.buy(ether('0.1'), [3, 7, 5, 1], {from: carol})
-
-                await this.lottery.drawing('1', {from: owner})
-
-                await this.lottery.claimReward('1', {from: alice})
-                await this.lottery.claimReward('2', {from: bob})
-                await this.lottery.claimReward('3', {from: carol})
-
-            })
-        })
-    })
+    // describe('#lottery.buy and draw', () => {
+    //     describe('success', () => {
+    //         it('buying and draw', async () => {
+    //             await this.lotteryNFT.transferOwnership(this.lottery.address)
+    //
+    //             await this.mockBEP.approve(this.lottery.address, ether('100'), {from: alice});
+    //             await this.lottery.buy(ether('0.1'), [1, 2, 3, 4], {from: alice});
+    //             await this.mockBEP.approve(this.lottery.address, ether('100'), {from: bob});
+    //             await this.lottery.buy(ether('0.1'), [5, 7, 9, 3], {from: bob});
+    //             await this.mockBEP.approve(this.lottery.address, ether('100'), {from: carol});
+    //             await this.lottery.buy(ether('0.1'), [3, 7, 5, 1], {from: carol})
+    //
+    //             await this.lottery.drawing('1', {from: owner})
+    //
+    //             await this.lottery.claimReward('1', {from: alice})
+    //             await this.lottery.claimReward('2', {from: bob})
+    //             await this.lottery.claimReward('3', {from: carol})
+    //
+    //         })
+    //     })
+    // })
 
     // commented to make tests run faster
     // uncomment to run
@@ -188,13 +192,13 @@ contract('OniProfile',([owner, proxyAdmin, alice, bob, carol]) => {
         describe('success', () => {
             it('buying and drawing', async () => {
                 await this.lotteryNFT.transferOwnership(this.lottery.address)
-                await this.mockBEP.approve(this.lottery.address, ether('100'), {from: owner});
+                await this.mockBEP.approve(this.lottery.address, ether('10'), {from: owner});
                 const balance = await this.mockBEP.balanceOf(this.lottery.address)
                 console.log(balance.toString())
-                await this.lottery.buy(ether('1'), [5, 6, 7, 8], {from: owner})
+                await this.lottery.buy(ether('0.1'), [5, 6, 7, 8], {from: owner})
                 const balance1 = await this.mockBEP.balanceOf(this.lottery.address)
                 console.log(balance1.toString())
-                await this.lottery.buy(ether('10'), [1, 2, 3, 4], {from: owner})
+                await this.lottery.buy(ether('0.1'), [1, 2, 3, 4], {from: owner})
                 const balance2 = await this.mockBEP.balanceOf(this.lottery.address)
                 console.log(balance2.toString())
 
