@@ -1,7 +1,7 @@
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 
 // add private key here
-const privKey = [];
+const privKeyBinanceTestnet = [];
 
 module.exports = {
   // Uncommenting the defaults below
@@ -27,7 +27,7 @@ module.exports = {
           network_id: "*"
       },
       binancetest: {
-          provider: () => new HDWalletProvider(privKey, 'https://data-seed-prebsc-1-s1.binance.org:8545'),
+          provider: () => new HDWalletProvider(privKeyBinanceTestnet, 'https://data-seed-prebsc-1-s1.binance.org:8545'),
           host: 'https://data-seed-prebsc-1-s1.binance.org:8545',
           network_id: 97,
       },
