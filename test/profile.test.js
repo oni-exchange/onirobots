@@ -189,16 +189,32 @@ contract('OniProfile',([owner, proxyAdmin, alice, bob, carol]) => {
             it('buying and drawing', async () => {
                 await this.lotteryNFT.transferOwnership(this.lottery.address)
                 await this.mockBEP.approve(this.lottery.address, ether('100'), {from: owner});
-                await this.lottery.buy(ether('10'), [6, 9, 2, 3], {from: owner})
+                const balance = await this.mockBEP.balanceOf(this.lottery.address)
+                console.log(balance.toString())
+                await this.lottery.buy(ether('1'), [5, 6, 7, 8], {from: owner})
+                const balance1 = await this.mockBEP.balanceOf(this.lottery.address)
+                console.log(balance1.toString())
                 await this.lottery.buy(ether('10'), [1, 2, 3, 4], {from: owner})
+                const balance2 = await this.mockBEP.balanceOf(this.lottery.address)
+                console.log(balance2.toString())
 
                 await this.lottery.enterDrawingPhase({from: owner})
-                await this.lottery.drawing('1', {from: owner})
+                await this.lottery.drawing('27', {from: owner})
+                console.log(await this.lottery.drawed({from: owner}))
+                const issueIndex = await this.lottery.issueIndex.call()
+                console.log('issueIndex: ', issueIndex.toString())
 
+                const getRewardView1 = await this.lottery.getRewardView('1', {from: owner})
+                console.log('getRewardView1: ', getRewardView1.toString())
                 const claimRewardResult1 = await this.lottery.claimReward('1', {from: owner})
                 await expectEvent.inTransaction(claimRewardResult1.tx, this.lottery, 'Claim');
+                const getRewardView2 = await this.lottery.getRewardView('1', {from: owner})
                 const claimRewardResult2 = await this.lottery.claimReward('2', {from: owner})
+                console.log('getRewardView2: ', getRewardView2.toString())
                 await expectEvent.inTransaction(claimRewardResult2.tx, this.lottery, 'Claim');
+                const balance5 = await this.mockBEP.balanceOf(this.lottery.address)
+                console.log(balance5.toString())
+                console.log(await this.lottery.winningNumbers.call())
             })
         })
     })
