@@ -218,7 +218,11 @@ contract('OniProfile',([owner, proxyAdmin, alice, bob, carol]) => {
                 await expectEvent.inTransaction(claimRewardResult2.tx, this.lottery, 'Claim');
                 const balance5 = await this.mockBEP.balanceOf(this.lottery.address)
                 console.log(balance5.toString())
-                console.log(await this.lottery.winningNumbers.call())
+                console.log((await this.lottery.winningNumbers('0')).toString());
+                console.log((await this.lottery.winningNumbers('1')).toString());
+                console.log((await this.lottery.winningNumbers('2')).toString());
+                console.log((await this.lottery.winningNumbers('3')).toString());
+
             })
         })
     })

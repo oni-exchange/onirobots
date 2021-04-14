@@ -13,48 +13,31 @@ contract('PointCenterIFO',([owner, proxyAdmin, alice, bob, carol]) => {
         this.mockBEP = await MockBEP20.new('Oniswap', 'ONI', ether('1000000000'), { from: owner });
         this.lotteryNFT = await LotteryNFT.new();
         this.lottery = await Lottery.new();
-        const abiEncodeData = web3.eth.abi.encodeFunctionCall({
-            "inputs": [
-                {
-                    "internalType": "contract IERC20",
-                    "name": "_oni",
-                    "type": "address"
-                },
-                {
-                    "internalType": "contract LotteryNFT",
-                    "name": "_lottery",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_minPrice",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint8",
-                    "name": "_maxNumber",
-                    "type": "uint8"
-                },
-                {
-                    "internalType": "address",
-                    "name": "_owner",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "_adminAddress",
-                    "type": "address"
-                }
-            ],
-            "name": "initialize",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        }, [this.mockBEP.address, this.lotteryNFT.address, ether('0.1'), 100, owner, owner]);
+
+        const abiEncodeData = this.lottery.contract.methods.initialize(
+          this.mockBEP.address,
+          this.lotteryNFT.address,
+          ether('0.1'),
+          100,
+          owner,
+          owner
+        ).encodeABI();
 
         this.proxyInstance = await LotteryUpgradeProxy.new(this.lottery.address, proxyAdmin, abiEncodeData);
         this.lotteryProxyAddress = this.proxyInstance.address;
         this.lottery = await Lottery.at(this.proxyInstance.address);
+
+        await this.lotteryNFT.transferOwnership(this.lottery.address);
+        await this.mockBEP.approve(alice, ether('50'));
+        await this.mockBEP.transfer(alice, ether('50'));
+        await this.mockBEP.approve(this.lottery.address, ether('50'), { from: alice });
+        await this.lottery.buy(ether('50'), [1,3,4,3], {from: alice, gas: 4700000});
+
+        const externalRandomNumber = '123';
+        await this.lottery.enterDrawingPhase();
+        await this.lottery.drawing(externalRandomNumber);
+
+
         this.oni_profile = await OniProfile.new(this.mockBEP.address, ether('0.1'), ether('0.1'), ether('0.1'), { from: owner })
         this.point_centerIFO = await PointCenterIFO.new(this.oni_profile.address, '10')
 
@@ -90,7 +73,12 @@ contract('PointCenterIFO',([owner, proxyAdmin, alice, bob, carol]) => {
     describe('#getPoints', () => {
         describe('success', () => {
             it('returns points', async () => {
-                await this.point_centerIFO.getPoints(this.custom_tokenBEP.address);
+                await this.point_centerIFO.addIFOAddress(this.ifo.address, '1', '1', '10', {from: owner});
+                await this.oni_profile.addNftAddress(this.lotteryNFT.address);
+                await this.oni_profile.addTeam("Team 1", "Testing");
+                await this.oni_profile.createProfile('1', this.lotteryNFT.address, '0');
+                await this.point_centerIFO.getPoints(this.ifo.address);
+                // await this.point_centerIFO.getPoints(this.custom_tokenBEP.address);
             });
         });
     });

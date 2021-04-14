@@ -3,9 +3,7 @@ pragma solidity 0.6.12;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
-interface Lottery {
-    function buy(uint256 _price, uint8[4] memory _numbers) external;
-}
+import "./Lottery.sol";
 
 contract LotteryRewardProxy {
     using SafeERC20 for IERC20;
