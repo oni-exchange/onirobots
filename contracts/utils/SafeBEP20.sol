@@ -2,9 +2,10 @@
 pragma solidity ^0.6.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721Holder.sol";
-import "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/IBEP20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
+
+import "@oni-exchange/onilib/contracts/token/BEP20/IBEP20.sol";
 
 /**
  * @title SafeBEP20

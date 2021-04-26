@@ -10,10 +10,12 @@
     "flatten": "truffle-flattener contracts/Lottery.sol > contracts/flattened/Lottery.sol && truffle-flattener contracts/LotteryNFT.sol > contracts/flattened/LotteryNFT.sol && truffle-flattener contracts/LotteryUpgradeProxy.sol > contracts/flattened/LotteryUpgradeProxy.sol"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^3.2.0",
+    "@openzeppelin/contracts": "^3.4.1",
     "@openzeppelin/test-helpers": "^0.5.6",
-    "@pancakeswap/pancake-swap-lib": "0.0.2",
+    "@oni-exchange/onilib": "0.0.2",
+    "@oni-exchange/onifarm": "0.0.4",
     "@truffle/hdwallet-provider": "^1.2.6",
+    "ganache-cli": "^6.12.2",
     "truffle": "^5.1.41",
     "truffle-hdwallet-provider-privkey": "^0.3.0",
     "truffle-privatekey-provider": "^1.5.0"
