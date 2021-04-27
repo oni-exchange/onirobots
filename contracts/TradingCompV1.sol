@@ -18,8 +18,8 @@ import "@openzeppelin/contracts/utils/EnumerableMap.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-import "@oni-exchange/onilib/contracts/IBEP20.sol";
-import "@oni-exchange/onilib/contracts/SafeBEP20.sol";
+import "@oni-exchange/onilib/contracts/token/BEP20/IBEP20.sol";
+//import "@oni-exchange/onilib/contracts/token/BEP20/SafeBEP20.sol";
 
 import "./IOniProfile.sol";
 import "./OniRobots.sol";

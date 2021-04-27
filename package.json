@@ -1,5 +1,5 @@
 {
-  "name": "Lottery",
+  "name": "@oni-exchange/onirobots",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -12,8 +12,8 @@
   "dependencies": {
     "@openzeppelin/contracts": "^3.4.1",
     "@openzeppelin/test-helpers": "^0.5.6",
-    "@oni-exchange/onilib": "0.0.2",
-    "@oni-exchange/onifarm": "0.0.4",
+    "@oni-exchange/onilib": "git://github.com/oni-exchange/onilib.git",
+    "@oni-exchange/onifarm": "git://github.com/oni-exchange/onifarm.git",
     "@truffle/hdwallet-provider": "^1.2.6",
     "ganache-cli": "^6.12.2",
     "truffle": "^5.1.41",

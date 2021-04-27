@@ -1,12 +1,12 @@
 # Fork
 https://github.com/pancakeswap/lottery-contract/commit/5dcea3af5f0fa7eaceded7be3b969330bc89f254
-# Lottery-Contract
+# OniRobots
 
 ## Install dependency
 
 ```shell script
 npm i @openzeppelin/contracts
-npm i @pancakeswap/pancake-swap-lib
+npm i @oni-exchange/onilib
 npm install
 ```
 
