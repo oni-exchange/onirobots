@@ -1,11 +1,10 @@
-pragma solidity 0.6.12;
+pragma solidity ^0.6.12;
 
-import "@oni-exchange/onilib/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
 import "@oni-exchange/onilib/contracts/token/BEP20/IBEP20.sol";
-import "@oni-exchange/onilib/contracts/utils/Address.sol";
 import "@oni-exchange/onilib/contracts/token/BEP20/SafeBEP20.sol";
-import "@oni-exchange/onilib/contracts/GSN/Context.sol";
-import "@oni-exchange/onilib/contracts/access/Ownable.sol";
 
 // import "@nomiclabs/buidler/console.sol";
 

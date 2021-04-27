@@ -1,4 +1,4 @@
-pragma solidity 0.6.12;
+pragma solidity ^0.6.12;
 
 contract LotteryOwnable {
     address private _owner;

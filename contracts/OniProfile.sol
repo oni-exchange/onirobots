@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.0;
+pragma solidity ^0.6.12;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721Holder.sol";
-import "@oni-exchange/onilib/contracts/token/BEP20/IBEP20.sol";
-import "./utils/SafeBEP20.sol";
 
+import "@oni-exchange/onilib/contracts/token/BEP20/IBEP20.sol";
+import "@oni-exchange/onilib/contracts/token/BEP20/SafeBEP20.sol";
 
 /** @title OniProfile.
 @dev It is a contract for users to bind their address

@@ -1,8 +1,9 @@
-pragma solidity 0.6.12;
+pragma solidity ^0.6.12;
 
-import "./utils/ReentrancyGuard.sol";
-import "./utils/SafeBEP20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+
+import "@oni-exchange/onilib/contracts/token/BEP20/SafeBEP20.sol";
 
 contract IFO is ReentrancyGuard {
     using SafeMath for uint256;

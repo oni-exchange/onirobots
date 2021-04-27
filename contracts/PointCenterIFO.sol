@@ -1,6 +1,7 @@
 pragma solidity ^0.6.12;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+
 import "./IOniProfile.sol";
 import "./IFO.sol";
 

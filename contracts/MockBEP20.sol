@@ -1,4 +1,4 @@
-pragma solidity 0.6.12;
+pragma solidity ^0.6.12;
 
 import "@oni-exchange/onilib/contracts/token/BEP20/BEP20.sol";
 
