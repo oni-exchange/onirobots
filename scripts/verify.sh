@@ -6,8 +6,10 @@ if [ -z $1 ]; then
   truffle run verify TradingCompV1 --network bsctestnet
   truffle run verify OniRobots --network bsctestnet
   truffle run verify RobotMintingStation --network bsctestnet
-  truffle run verify ClaimRefund --network bsctestnet
-  truffle run verify RobotSpecial --network bsctestnet
+  truffle run verify RobotFactoryV2 --network bsctestnet
+  truffle run verify RobotFactoryV3 --network bsctestnet
+  truffle run verify ClaimBackOni --network bsctestnet
+  truffle run verify RobotSpecialV1 --network bsctestnet
 else
   if [ -z $2 ]; then
     truffle run verify $1 --network bsctestnet
@@ -19,8 +21,10 @@ else
       truffle run verify TradingCompV1 --network $2
       truffle run verify OniRobots --network $2
       truffle run verify RobotMintingStation --network $2
-      truffle run verify ClaimRefund --network $2
-      truffle run verify RobotSpecial --network $2
+      truffle run verify RobotFactoryV2 --network $2
+      truffle run verify RobotFactoryV3 --network $2
+      truffle run verify ClaimBackOni --network $2
+      truffle run verify RobotSpecialV1 --network $2
     else
       truffle run verify $1 --network $2
     fi

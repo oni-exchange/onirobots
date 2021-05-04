@@ -1,4 +1,5 @@
 #!/bin/bash
+# not used now, temporary left here
 
 truffle compile --network bscTestnet
 

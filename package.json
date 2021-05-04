@@ -5,7 +5,7 @@
   "scripts": {
     "testrpc": "ganache-cli --gasLimit 13000000 -e 100000 --networkId 666",
     "migrate": "truffle migrate --network bsctestnet --reset",
-    "compile": "bash ./scripts/compile.sh",
+    "compile": "truffle compile --network bscTestnet",
     "test": "rm -rf contracts/flattened/*.sol && truffle test",
     "flatten": "bash ./scripts/flatten.sh",
     "verify": "bash ./scripts/verify.sh"
