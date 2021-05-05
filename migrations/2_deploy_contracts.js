@@ -6,7 +6,6 @@ const HDWalletProvider = require('@truffle/hdwallet-provider');
 const DotEnv = require('dotenv').config();
 const fs = require('fs');
 const truffle_config = require('../truffle-config.js');
-//console.log(truffle_config);
 
 const mnemonic = fs.readFileSync('../.secret').toString().trim();
 
@@ -27,31 +26,23 @@ const RobotFactoryV3 = artifacts.require('RobotFactoryV3');
 const TradingCompV1= artifacts.require('TradingCompV1');
 const RobotSpecialV1 = artifacts.require('RobotSpecialV1');
 
-//const Treasury = artifacts.require('treasury');
-//const treasury = new Treasury({
-//    client: null,
-//    namespace: 'Treasury',
-//    ttl: tauist.s.fiveMinutes
-//});
-
-
 const config = {
-    MasterChef: {
-        oniPerBlock: '1000',
-        startBlock: '100',
-        dev: process.env.DEPLOYER_ACCOUNT
-    },
+//    MasterChef: {
+//        oniPerBlock: '1000',
+//        startBlock: '100',
+//        dev: process.env.DEPLOYER_ACCOUNT
+//    },
     IFO: {
         offeringAmount: '100',
-        raisingAmount: '50',
-        startBlock: '100',
-        endBlock: '200'
+        raisingAmount: '80',
+        startBlock: '8592171', // + ~1 day
+        endBlock: '8892171' // + ~11 days
     },
-    SmartChef: {
-        rewardPerBlock: '10',
-        startBlock: '100',
-        bonusEndBlock: '200'
-    },
+//    SmartChef: {
+//        rewardPerBlock: '10',
+//        startBlock: '100',
+//        bonusEndBlock: '200'
+//    },
     OniProfile: {
         numberOniToReactivate: '1',
         numberOniToRegister: '1',
@@ -61,17 +52,17 @@ const config = {
         maxViewLength: '10'
     },
     ClaimBackOni: {
-        numberOni: '100',
-        thresholdUser: '50'
+        numberOni: '10',
+        thresholdUser: '5'
     },
     Robots: {
-        baseUri: ""
+        baseUri: "127.0.0.1"
     },
     RobotFactory: { // V2 & V3
-        tokenPrice: '10',
-        ipfsHash: 'QmWaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', // just an example
-        startBlockNumber: '100',
-        endBlockNumber: '200'
+        tokenPrice: '1',
+        ipfsHash: 'QmWaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+        startBlockNumber: '8592171', // + ~1 day
+        endBlockNumber: '8892171' // + ~11 days
     },
     RobotSpecial: {
         maxViewLength: '10'
