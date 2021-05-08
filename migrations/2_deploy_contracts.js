@@ -33,9 +33,10 @@ const config = {
 //        dev: process.env.DEPLOYER_ACCOUNT
 //    },
     IFO: {
+//        adminAddress: process.env.IFO_ADMIN_ADDRESS,
         offeringAmount: '100',
         raisingAmount: '80',
-        startBlock: '8592171', // + ~1 day
+        startBlock: '8571079', // + ~1 day
         endBlock: '8892171' // + ~11 days
     },
 //    SmartChef: {
@@ -44,6 +45,9 @@ const config = {
 //        bonusEndBlock: '200'
 //    },
     OniProfile: {
+//        NFT_ROLE_ADDRESS: process.env.NFT_ROLE_ADDRESS,
+//        POINT_ROLE_ADDRESS: process.env.POINT_ROLE_ADDRESS,
+//        SPECIAL_ROLE_ADDRESS: process.env.SPECIAL_ROLE_ADDRESS,
         numberOniToReactivate: '1',
         numberOniToRegister: '1',
         numberOniToUpdate: '1'
@@ -61,7 +65,7 @@ const config = {
     RobotFactory: { // V2 & V3
         tokenPrice: '1',
         ipfsHash: 'QmWaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        startBlockNumber: '8592171', // + ~1 day
+        startBlockNumber: '8571079', // + ~1 day
         endBlockNumber: '8892171' // + ~11 days
     },
     RobotSpecial: {
@@ -103,10 +107,11 @@ module.exports = async function(deployer, network, accounts) {
         config.IFO.endBlock,
         config.IFO.offeringAmount,
         config.IFO.raisingAmount,
-        process.env.DEPLOYER_ACCOUNT,
+        process.env.IFO_ADMIN_ADDRESS,
         { from: process.env.DEPLOYER_ACCOUNT }
         );
     const IFOInstance = await IFO.deployed();
+//    console.log(IFOInstance);
 
 //    await deployer.deploy(SmartChef,
 //        SyrupBarInstance.address,
@@ -126,6 +131,7 @@ module.exports = async function(deployer, network, accounts) {
         { from: process.env.DEPLOYER_ACCOUNT }
         );
     const OniProfileInstance = await OniProfile.deployed();
+//    console.log(OniProfileInstance)
 
     await deployer.deploy(PointCenterIFO,
         oniTokenAddress,
@@ -133,6 +139,7 @@ module.exports = async function(deployer, network, accounts) {
         { from: process.env.DEPLOYER_ACCOUNT }
         );
     const PointCenterIFOInstance = await PointCenterIFO.deployed();
+//    console.log(PointCenterIFOInstance)
 
     await deployer.deploy(ClaimBackOni,
         oniTokenAddress,
@@ -170,7 +177,7 @@ module.exports = async function(deployer, network, accounts) {
     // RobotFactoryV3
     await deployer.deploy(RobotFactoryV3,
         RobotFactoryV2Instance .address,
-        RobotMintingStationInstance .address,
+        RobotMintingStationInstance.address,
         oniTokenAddress,
         config.RobotFactory.tokenPrice,
         config.RobotFactory.ipfsHash,
@@ -181,7 +188,7 @@ module.exports = async function(deployer, network, accounts) {
 
     await deployer.deploy(TradingCompV1,
         OniProfileInstance .address,
-        RobotMintingStationInstance .address,
+        RobotMintingStationInstance.address,
         oniTokenAddress,
         { from: process.env.DEPLOYER_ACCOUNT }
         );
@@ -195,6 +202,59 @@ module.exports = async function(deployer, network, accounts) {
         { from: process.env.DEPLOYER_ACCOUNT }
         );
     const RobotSpecialInstance = await RobotSpecialV1.deployed();
+
+    // ----------------  INITIALIZE ----------------
+
+    // get roles
+    const nftRole = await OniProfileInstance.NFT_ROLE();
+    const pointRole = await OniProfileInstance.POINT_ROLE();
+    const specialRole = await OniProfileInstance.SPECIAL_ROLE();
+
+    // grant roles
+    console.log(process.env.NFT_ROLE_ADDRESS);
+    console.log(process.env.POINT_ROLE_ADDRESS);
+    console.log(process.env.SPECIAL_ROLE_ADDRESS);
+
+    await OniProfileInstance.grantRole(nftRole, process.env.NFT_ROLE_ADDRESS);
+    await OniProfileInstance.grantRole(pointRole, process.env.POINT_ROLE_ADDRESS);
+    await OniProfileInstance.grantRole(specialRole, process.env.SPECIAL_ROLE_ADDRESS);
+
+    await OniRobotsInstance.transferOwnership(
+        RobotMintingStationInstance.address,
+        { from: process.env.DEPLOYER_ACCOUNT }
+        );
+
+    const minterRole = await RobotMintingStationInstance.MINTER_ROLE();
+    await RobotMintingStationInstance.grantRole(
+        minterRole,
+        process.env.MINTER_ADDRESS,
+        { from: process.env.DEPLOYER_ACCOUNT });
+
+    await RobotMintingStationInstance.grantRole(
+        minterRole,
+        RobotFactoryV3Instance.address,
+        { from: process.env.DEPLOYER_ACCOUNT });
+
+    await RobotMintingStationInstance.grantRole(
+        minterRole, RobotSpecialInstance.address,
+        { from: process.env.DEPLOYER_ACCOUNT });
+
+    // create teams
+
+    await OniProfileInstance.addTeam("YELLOW TESLA", "Intelligent TESLA robot with competitive nature.");
+    await OniProfileInstance.addTeam("RED APEX", "Battle APEX robot with advanced AI system.");
+    await OniProfileInstance.addTeam("WHITE ONIX", "Friendly ONIX that loves AMM and traveling through wi-fi.");
+    await OniProfileInstance.addTeam("GREEN SCRAPER", "Hungry SCRAPER that eats APY for breakfast.");
+
+    // not required for now
+//    await RobotSpecialInstance.addRobot(11, "robotrobotrobot.robot", 5, 1);
+//    await expectEvent.inTransaction(
+//      tx,
+//      RobotSpecialInstance,
+//      'RobotAdd', {  },
+//      { robotId: 1, thresholdUser: 5, costCake: 1 },
+//    );
+
   } else if (network === 'bsc') { // binance mainnet
     // do nothing for now
   }
