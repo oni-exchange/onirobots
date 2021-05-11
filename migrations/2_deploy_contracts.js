@@ -219,6 +219,12 @@ module.exports = async function(deployer, network, accounts) {
     await OniProfileInstance.grantRole(pointRole, process.env.POINT_ROLE_ADDRESS);
     await OniProfileInstance.grantRole(specialRole, process.env.SPECIAL_ROLE_ADDRESS);
 
+    await OniProfileInstance.grantRole(
+        nftRole,
+        OniRobotsInstance.address,
+        { from: process.env.DEPLOYER_ACCOUNT }
+    );
+
     await OniRobotsInstance.transferOwnership(
         RobotMintingStationInstance.address,
         { from: process.env.DEPLOYER_ACCOUNT }
