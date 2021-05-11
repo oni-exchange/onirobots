@@ -215,15 +215,14 @@ module.exports = async function(deployer, network, accounts) {
     console.log(process.env.POINT_ROLE_ADDRESS);
     console.log(process.env.SPECIAL_ROLE_ADDRESS);
 
-    await OniProfileInstance.grantRole(nftRole, process.env.NFT_ROLE_ADDRESS);
+//    await OniProfileInstance.grantRole(nftRole, process.env.NFT_ROLE_ADDRESS);
     await OniProfileInstance.grantRole(pointRole, process.env.POINT_ROLE_ADDRESS);
     await OniProfileInstance.grantRole(specialRole, process.env.SPECIAL_ROLE_ADDRESS);
-
-    await OniProfileInstance.grantRole(
-        nftRole,
+    // TODO (IntegralTeam): test following
+    await OniProfileInstance.addNftAddress(
         OniRobotsInstance.address,
         { from: process.env.DEPLOYER_ACCOUNT }
-    );
+        );
 
     await OniRobotsInstance.transferOwnership(
         RobotMintingStationInstance.address,
